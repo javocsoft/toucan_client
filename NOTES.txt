@@ -1,0 +1,5 @@
+
+Toucan Client library needs JavocSoft Android ToolBox library. It can be
+downloaded from GitHub at https://github.com/javocsoft/javocsoft-toolbox.
+
+
