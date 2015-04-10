@@ -91,8 +91,8 @@ public class ToucanClient {
 	private static final String API_ENDPOINT_REGISTRATION = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?dr";
 	private static final String API_ENDPOINT_UNREGISTRATION = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?du";
 	private static final String API_ENDPOINT_ENABLE_REGISTERED_DEVICE = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?de";
-	private static final String API_ENDPOINT_ACK_RECEIVED = API_ENDPOINT_BASE + "/PushNOTApi/ackreport" +  "?op=1";
-	private static final String API_ENDPOINT_ACK_READ = API_ENDPOINT_BASE + "/PushNOTApi/ackreport" +  "?op=2";
+	private static final String API_ENDPOINT_ACK_RECEIVED = API_ENDPOINT_BASE + "/PushNOTApi/ackreport" +  "?op=2";
+	private static final String API_ENDPOINT_ACK_READ = API_ENDPOINT_BASE + "/PushNOTApi/ackreport" +  "?op=1";
 	private static final String API_ENDPOINT_ADD_TAGS = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?dta";
 	private static final String API_ENDPOINT_REMOVE_TAGS = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?dtr";
 	private static final String API_ENDPOINT_LIST_TAGS = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?dtl";
