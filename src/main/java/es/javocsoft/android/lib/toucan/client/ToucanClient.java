@@ -47,9 +47,9 @@ import es.javocsoft.android.lib.toucan.client.request.bean.DeviceRegistrationBea
  * See http://toucan.javocsoft.es for more info.
  * 
  * @author JavocSoft Team 
- * @version 1.0 $Rev: 695 $
+ * @version 1.0 $Rev: 702 $
  * $Author: jgonzalez $
- * $Date: 2015-04-10 16:20:59 +0200 (Fri, 10 Apr 2015) $
+ * $Date: 2015-04-13 14:51:49 +0200 (Mon, 13 Apr 2015) $
  */
 public class ToucanClient {
 
@@ -291,6 +291,14 @@ public class ToucanClient {
 			String urlEncodedUrlParams = URLEncoder.encode(encodedUrlParams, "UTF-8");
 		
 			String finalUrl = API_ENDPOINT_ENABLE_REGISTERED_DEVICE + "=" + urlEncodedUrlParams;
+			
+			//TODO 	Check if there is connection, if not,
+			//		save the beacon 
+			/*if(ToolBox.net_isNetworkAvailable(context)){
+			
+			}else{
+			
+			}*/
 		
 			new ToucanGetWorker(finalUrl, API_OPERATION_DEVICE_ENABLE).start();
 			
