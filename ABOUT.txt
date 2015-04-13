@@ -1,0 +1,8 @@
+JavocSoft Toucan Library
+========================
+
+
+This library is a client library for Android applications that want to use
+JavocSoft Toucan Notification service to receive and send notifications.
+
+
