@@ -47,9 +47,9 @@ import es.javocsoft.android.lib.toucan.client.request.bean.DeviceRegistrationBea
  * See http://toucan.javocsoft.es for more info.
  * 
  * @author JavocSoft Team 
- * @version 1.0 $Rev: 702 $
+ * @version 1.0 $Rev: 708 $
  * $Author: jgonzalez $
- * $Date: 2015-04-13 14:51:49 +0200 (Mon, 13 Apr 2015) $
+ * $Date: 2015-04-14 15:39:21 +0200 (Tue, 14 Apr 2015) $
  */
 public class ToucanClient {
 
@@ -57,7 +57,7 @@ public class ToucanClient {
 	private static ToucanClient toucanClient;
 	
 	private static final String API_ENDPOINT_BASE = "https://api.toucan.javocsoft.es";
-	
+		
 	private static final String OS_TAG = "Android";
 	private static final String LOG_TAG = "ToucanClient";
 	
@@ -176,6 +176,41 @@ public class ToucanClient {
 			devRegRequest.setHashSignature(hashSignature);
 		}
 				
+		launchDeviceRegistrationRequest(devRegRequest);
+	}
+	
+	public void deviceRegistration(String notificationToken, String installReferral) {
+		//Save the device GCM notification token.
+		toucanClient.deviceNotificationToken = notificationToken;
+		ToolBox.prefs_savePreference(toucanClient.context, PREF_NAME, PREF_KEY_DEVICE_NOT_TOKEN, String.class, notificationToken);
+		
+		DeviceRegistrationRequest devRegRequest = generateDeviceRegistrationInfo(notificationToken);
+		if(installReferral!=null && installReferral.length()>0) {
+			devRegRequest.getData().setInstallReferral(installReferral);
+			
+			String hashSignature = devRegRequest.getData().getSecurityHash(appPublicKey);
+			devRegRequest.setHashSignature(hashSignature);
+		}
+				
+		launchDeviceRegistrationRequest(devRegRequest);
+	}
+	
+	public void deviceRegistration(String notificationToken, int externalId, String installReferral) {
+		//Save the device GCM notification token.
+		toucanClient.deviceNotificationToken = notificationToken;
+		ToolBox.prefs_savePreference(toucanClient.context, PREF_NAME, PREF_KEY_DEVICE_NOT_TOKEN, String.class, notificationToken);
+		
+		DeviceRegistrationRequest devRegRequest = generateDeviceRegistrationInfo(notificationToken);
+		if(installReferral!=null && installReferral.length()>0) {
+			devRegRequest.getData().setInstallReferral(installReferral);
+		}
+		if(externalId>=1) {
+			devRegRequest.getData().setExtId(externalId);		
+		}
+		
+		String hashSignature = devRegRequest.getData().getSecurityHash(appPublicKey);
+		devRegRequest.setHashSignature(hashSignature);
+		
 		launchDeviceRegistrationRequest(devRegRequest);
 	}
 	
