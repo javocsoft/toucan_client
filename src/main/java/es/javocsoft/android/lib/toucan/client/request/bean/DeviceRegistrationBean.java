@@ -26,33 +26,47 @@ import java.util.Date;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.google.gson.annotations.Expose;
+
 
 
 /**
  * Device registration information bean.
  * 
  *  @author JavocSoft Team 
- *  @version 1.0 $Rev: 695 $
+ *  @version 1.0 $Rev: 714 $
  *  $Author: jgonzalez $
- *  $Date: 2015-04-10 16:20:59 +0200 (Fri, 10 Apr 2015) $
+ *  $Date: 2015-04-21 20:02:48 +0200 (Tue, 21 Apr 2015) $
  */
 public class DeviceRegistrationBean {
 	
+	@Expose
 	private int id;
 		
+	@Expose
 	private int appVersion;
 	
+	@Expose
 	private int extId;
+	@Expose
 	private String notToken;
 	
+	@Expose
 	private String devId;
+	@Expose
 	private String devOs;
+	@Expose
 	private String devExtra;
+	@Expose
 	private String devLocale;
+	@Expose
 	private String devResType;
+	@Expose
 	private String installReferral;
 	
+	@Expose
 	private Date tsCreation;
+	@Expose
 	private Date tsUpdate;
 	
 	

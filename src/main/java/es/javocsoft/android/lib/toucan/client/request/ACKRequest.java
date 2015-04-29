@@ -21,26 +21,34 @@
  */
 package es.javocsoft.android.lib.toucan.client.request;
 
+import com.google.gson.annotations.Expose;
+
 
 /**
  * An ACK request for read or received notification.
  * 
  *  @author JavocSoft Team 
- *  @version 1.0 $Rev: 695 $
+ *  @version 1.0 $Rev: 714 $
  *  $Author: jgonzalez $
- *  $Date: 2015-04-10 16:20:59 +0200 (Fri, 10 Apr 2015) $
+ *  $Date: 2015-04-21 20:02:48 +0200 (Tue, 21 Apr 2015) $
  */
 public class ACKRequest {
 	
+	@Expose
 	private String token;
+	@Expose
 	private String nId;
+	@Expose
 	private String nRef;
 	/* Just in case in a multiple delivery the user receives two notifications in the same
 	 * package but with different texts. This only could be possible when uploading a file
 	 * with external Ids. */
+	@Expose
 	private String message;
-		
+	
+	@Expose
 	private String appKey;
+	@Expose
 	private String appHashSignature; //SHA-1 of PubKey + API TOKEN
 	
 	

@@ -26,24 +26,30 @@ import java.util.List;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.google.gson.annotations.Expose;
+
 
 /**
  * To make a request to insert tags for 
  * an application and a device.
  * 
  * @author JavocSoft Team 
- * @version 1.0 $Rev: 695 $
+ * @version 1.0 $Rev: 714 $
  * $Author: jgonzalez $
- * $Date: 2015-04-10 16:20:59 +0200 (Fri, 10 Apr 2015) $
+ * $Date: 2015-04-21 20:02:48 +0200 (Tue, 21 Apr 2015) $
  */
 public class AppDevTagsOperationRequest {
 	
-	
+	@Expose
 	private String appKey;
+	@Expose
 	private String devId;
+	@Expose
 	private String appHashSignature; //SHA-1 of PubKey + API TOKEN
+	@Expose
 	private String hashSignature; //SHA-1 of the request data bean 
 	
+	@Expose
 	private List<String> tags;
 		
 	

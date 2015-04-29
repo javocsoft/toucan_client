@@ -30,14 +30,18 @@ import com.google.gson.GsonBuilder;
  * This singleton is used to get a valid simple JSON parser.
  * 
  * @author JavocSoft Team 
- * @version 1.0 $Rev: 695 $
+ * @version 1.0 $Rev: 714 $
  * $Author: jgonzalez $
- * $Date: 2015-04-10 16:20:59 +0200 (Fri, 10 Apr 2015) $
+ * $Date: 2015-04-21 20:02:48 +0200 (Tue, 21 Apr 2015) $
  */
 public class GsonProcessor {
 
 	private static GsonProcessor gsonProcessor = null;
+	
+	/** A GSon instance for JSOn parsing. Allows to avoid fields with 'transient' attribute. */
 	public Gson gson = null;
+	/** A GSon instance for JSOn parsing. Allows to avoid fields without '@Exposed' annotation. */
+	public Gson gsonExposedFilter = null;
 
 	public static GsonProcessor getInstance() {
 		if (gsonProcessor == null) {
@@ -52,5 +56,9 @@ public class GsonProcessor {
 		
 		//This allows to avoid fields with the transient attribute
 		gson = gsonBuilder.excludeFieldsWithModifiers(Modifier.TRANSIENT).create();
-	}
+		
+		//This allows to avoid fields without the @Exposed annotation
+		gsonExposedFilter = gsonBuilder.excludeFieldsWithoutExposeAnnotation().create();
+	}	
+	
 }
