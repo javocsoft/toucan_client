@@ -60,8 +60,7 @@ public class ToucanClient {
 	/** The instance of the API client */
 	private static ToucanClient toucanClient;
 	
-	//private static final String API_ENDPOINT_BASE = "https://api.toucan.javocsoft.es";
-	private static final String API_ENDPOINT_BASE = "http://clientes.tatamia.com";
+	private static final String API_ENDPOINT_BASE = "https://api.toucan.javocsoft.es";	
 	
 	private static final String OS_TAG = "Android";
 	public static final String LOG_TAG = "ToucanClient";
