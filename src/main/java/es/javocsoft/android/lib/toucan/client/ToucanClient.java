@@ -33,7 +33,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import es.javocsoft.android.lib.toolbox.ToolBox;
-import es.javocsoft.android.lib.toucan.client.json.GsonProcessor;
+import es.javocsoft.android.lib.toolbox.json.GsonProcessor;
 import es.javocsoft.android.lib.toucan.client.request.ACKRequest;
 import es.javocsoft.android.lib.toucan.client.request.AppDevTagsOperationRequest;
 import es.javocsoft.android.lib.toucan.client.request.DeviceRegistrationRequest;
@@ -51,16 +51,17 @@ import es.javocsoft.android.lib.toucan.client.thread.callback.ResponseCallback;
  * See http://toucan.javocsoft.es for more info.
  * 
  * @author JavocSoft Team 
- * @version 1.0 $Rev: 715 $
+ * @version 1.0 $Rev: 720 $
  * $Author: jgonzalez $
- * $Date: 2015-04-22 17:35:47 +0200 (Wed, 22 Apr 2015) $
+ * $Date: 2015-04-29 12:34:12 +0200 (Wed, 29 Apr 2015) $
  */
 public class ToucanClient {
 
 	/** The instance of the API client */
 	private static ToucanClient toucanClient;
 	
-	private static final String API_ENDPOINT_BASE = "https://api.toucan.javocsoft.es";	
+	//private static final String API_ENDPOINT_BASE = "https://api.toucan.javocsoft.es";
+	private static final String API_ENDPOINT_BASE = "http://clientes.tatamia.com";
 	
 	private static final String OS_TAG = "Android";
 	public static final String LOG_TAG = "ToucanClient";
@@ -74,6 +75,7 @@ public class ToucanClient {
 	private String OSInfo = null;
 	private String DEVInfo = null;
 	
+	/** The Toucan HTTP worker type. */
 	public static enum TOUCAN_WORKER_TYPE {GET, POST};
 	
 	
@@ -81,8 +83,7 @@ public class ToucanClient {
 	private static final String PREF_KEY_DEVICE_UNIQUEID = "toucan_client_key_devuniqueid";
 	private static final String PREF_KEY_DEVICE_NOT_TOKEN = "toucan_client_key_devnottoken";
 	
-	/** All pending deliveries, when they can not be delivered, are
-	 * store in cache files. */
+	/** All pending deliveries, when they can not be delivered, are store in cache files. */
 	public static final String CACHED_REQUEST_FILE_PREFIX = "toucan_client_pending_request_";
 	
 	/** The message content key */
@@ -94,7 +95,7 @@ public class ToucanClient {
 	/** The message notification timestamp key */
 	public static final String NOTIFICATION_MESSAGE_TS = "ts";
 	
-		
+	
 	//ENDPOINTS OF THE API OPERATIONS
 	private static final String API_ENDPOINT_REGISTRATION = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?dr";
 	private static final String API_ENDPOINT_UNREGISTRATION = API_ENDPOINT_BASE + "/PushNOTApi/NOTPushApi" +  "?du";
@@ -164,6 +165,13 @@ public class ToucanClient {
 	//PUBLIC METHODS
 	
 	
+	/**
+	 * Registers the device with the specified GCM registration token 
+	 * for the application.
+	 * 
+	 * @param notificationToken	The GCM notification token.	
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void deviceRegistration(String notificationToken, ResponseCallback callback) {
 		//Save the device GCM notification token.
 		toucanClient.deviceNotificationToken = notificationToken;
@@ -176,6 +184,15 @@ public class ToucanClient {
 		launchDeviceRegistrationRequest(devRegRequest, callback);		
 	}
 	
+	/**
+	 * Registers the device with the specified GCM registration token 
+	 * for the application. We set also an external id for back-end
+	 * purposes.
+	 * 
+	 * @param notificationToken	The GCM notification token.
+	 * @param externalId	An external id that links GCM with some kind of internal back-end.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void deviceRegistration(String notificationToken, int externalId, ResponseCallback callback) {
 		//Save the device GCM notification token.
 		toucanClient.deviceNotificationToken = notificationToken;
@@ -195,6 +212,15 @@ public class ToucanClient {
 		launchDeviceRegistrationRequest(devRegRequest, callback);
 	}
 	
+	/**
+	 * Registers the device with the specified GCM registration token 
+	 * for the application. When the installation URL has some referral 
+	 * info, we send this info to the server to be saved.
+	 * 
+	 * @param notificationToken	The GCM notification token.
+	 * @param installReferral	The installation referral data.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void deviceRegistration(String notificationToken, String installReferral, ResponseCallback callback) {
 		//Save the device GCM notification token.
 		toucanClient.deviceNotificationToken = notificationToken;
@@ -214,6 +240,17 @@ public class ToucanClient {
 		launchDeviceRegistrationRequest(devRegRequest, callback);
 	}
 	
+	/**
+	 * Registers the device with the specified GCM registration token 
+	 * for the application. We set also an external id for back-end
+	 * purposes. When the installation URL has some referral 
+	 * info, we send this info to the server to be saved.
+	 * 
+	 * @param notificationToken	The GCM notification token.
+	 * @param externalId	An external id that links GCM with some kind of internal back-end.
+	 * @param installReferral	The installation referral data.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void deviceRegistration(String notificationToken, int externalId, String installReferral, ResponseCallback callback) {
 		//Save the device GCM notification token.
 		toucanClient.deviceNotificationToken = notificationToken;
@@ -236,6 +273,12 @@ public class ToucanClient {
 		launchDeviceRegistrationRequest(devRegRequest, callback);
 	}
 	
+	/**
+	 * Informs to the API the installation referral.
+	 * 
+	 * @param installReferral	The installation referral data.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void informInstallReferral(String installReferral, ResponseCallback callback) {
 		
 		if(isNotificationTokenPresent()) {
@@ -257,6 +300,13 @@ public class ToucanClient {
 		}
 	}
 	
+	/**
+	 * Informs to the API that a notification was received.
+	 * 
+	 * @param notificationBundle	Registers the device with the specified 
+	 * 								GCM registration token for the application.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void doReceivedACK(Bundle notificationBundle, ResponseCallback callback) {
 		if(isNotificationTokenPresent()) {
 			ACKRequest ackRequest = generateACKnfo(notificationBundle);
@@ -273,7 +323,14 @@ public class ToucanClient {
 			Log.i(LOG_TAG, API_OPERATION_ACK_RECEIVED.toUpperCase() + " Error. Notification token not stablished. Please, execute 'deviceRegistration()' first.");
 		}
 	}
-		
+	
+	/**
+	 * Informs to the API that a notification was read.
+	 * 
+	 * @param notificationBundle	Registers the device with the specified 
+	 * 								GCM registration token for the application.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void doReadACK(Bundle notificationBundle, ResponseCallback callback) {
 		if(isNotificationTokenPresent()) {
 			ACKRequest ackRequest = generateACKnfo(notificationBundle);
@@ -291,6 +348,12 @@ public class ToucanClient {
 		}
 	}
 	
+	/**
+	 * Allows adding tags for the application/deviceId.
+	 * 
+	 * @param tags	A list of tags.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void doAddTags(List<String> tags,ResponseCallback callback) {
 		//Prepare device registration request
 		AppDevTagsOperationRequest tagAddRequest = new AppDevTagsOperationRequest();
@@ -315,6 +378,13 @@ public class ToucanClient {
 				
 	}
 	
+	/**
+	 * Deletes current application/DeviceId tags setting the specified
+	 * tags.
+	 * 
+	 * @param tags		tags to add.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void doResetTags(List<String> tags,ResponseCallback callback) {
 		//Prepare device registration request
 		AppDevTagsOperationRequest tagAddRequest = new AppDevTagsOperationRequest();
@@ -339,6 +409,12 @@ public class ToucanClient {
 				
 	}
 	
+	/**
+	 * Removes the specified tags for the application and deviceId.
+	 * 
+	 * @param tags		A list of tags to remove.
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void doRemoveTags(List<String> tags, ResponseCallback callback) {
 		//Prepare device registration request
 		AppDevTagsOperationRequest tagAddRequest = new AppDevTagsOperationRequest();
@@ -363,6 +439,11 @@ public class ToucanClient {
 		
 	}
 	
+	/**
+	 * Gets the list of tags for the application and device Id.
+	 * 
+	 * @param callback A callback to run when operation finishes.
+	 */
 	public void doListTags(ResponseCallback callback) {
 		try{ 
 			String appHashSignature = generateSHA1(appPublicKey + apiToken);
@@ -387,6 +468,12 @@ public class ToucanClient {
 		}
 	}
 	
+	/**
+	 * Un-registers a device from server. Avoiding delivering 
+	 * notifications to it.
+	 * 
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void doDeviceUnregister(ResponseCallback callback) {
 		try{ 
 			String appHashSignature = generateSHA1(appPublicKey + apiToken);
@@ -408,6 +495,11 @@ public class ToucanClient {
 		}
 	}
 	
+	/**
+	 * Enables a registered device.
+	 * 
+	 * @param callback	A callback to run when operation finishes.
+	 */
 	public void doEnableRegisteredDevice(ResponseCallback callback) {
 		
 		try{ 
@@ -429,6 +521,7 @@ public class ToucanClient {
 			Log.e(LOG_TAG, "Error doing operation " + API_OPERATION_DEVICE_ENABLE.toUpperCase() + " to Toucan API (" + e.getMessage() + ")", e);
 		}
 	}
+	
 	
 	
 	//AUXILIAR
@@ -515,7 +608,7 @@ public class ToucanClient {
 	 */
 	private synchronized void cacheOperationRequest(ToucanWorker operation, boolean startPendingOperationsService) {
 		try{
-			String jsonData = GsonProcessor.getInstance().gsonExposedFilter.toJson(operation);			
+			String jsonData = GsonProcessor.getInstance().getGsonWithExposedFilter().toJson(operation);			
 			String fileName = operation.getJobId();
 			ToolBox.storage_storeDataInInternalStorage(context, fileName, jsonData.getBytes());
 			Log.i(ToucanClient.LOG_TAG, "Saved pending operation request to disk (" + operation.getOperationName() + "/" + operation.getJobId() + ")");

@@ -28,8 +28,8 @@ import android.content.Context;
 import android.util.Log;
 import es.javocsoft.android.lib.toolbox.ToolBox;
 import es.javocsoft.android.lib.toolbox.ToolBox.HTTP_METHOD;
+import es.javocsoft.android.lib.toolbox.json.GsonProcessor;
 import es.javocsoft.android.lib.toucan.client.ToucanClient;
-import es.javocsoft.android.lib.toucan.client.json.GsonProcessor;
 import es.javocsoft.android.lib.toucan.client.response.Response;
 import es.javocsoft.android.lib.toucan.client.response.exception.ResponseParseException;
 import es.javocsoft.android.lib.toucan.client.thread.callback.ResponseCallback;
@@ -62,7 +62,7 @@ public class ToucanPostWorker extends ToucanWorker {
 			Map<String, String> headersData = new HashMap<String, String>();
 			headersData.put("Authorization", "ttmSecTKN " + apiToken);
 			
-			String jsonData = GsonProcessor.getInstance().gsonExposedFilter.toJson(data);
+			String jsonData = GsonProcessor.getInstance().getGsonWithExposedFilter().toJson(data);
 			String finalUrl = (endpoint);
 			
 			String jsonDataKey = null;

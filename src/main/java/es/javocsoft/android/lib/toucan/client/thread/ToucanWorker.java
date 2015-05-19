@@ -31,8 +31,8 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import es.javocsoft.android.lib.toolbox.ToolBox;
 import es.javocsoft.android.lib.toolbox.ToolBox.HASH_TYPE;
+import es.javocsoft.android.lib.toolbox.json.GsonProcessor;
 import es.javocsoft.android.lib.toucan.client.ToucanClient;
-import es.javocsoft.android.lib.toucan.client.json.GsonProcessor;
 import es.javocsoft.android.lib.toucan.client.request.ACKRequest;
 import es.javocsoft.android.lib.toucan.client.request.AppDevTagsOperationRequest;
 import es.javocsoft.android.lib.toucan.client.request.DeviceRegistrationRequest;
@@ -95,7 +95,7 @@ public abstract class ToucanWorker extends Thread implements Runnable {
 		this.opname = opName;
 		this.callback = callback;
 		if(callback!=null)
-			callbackString = GsonProcessor.getInstance().gsonExposedFilter.toJson(callback);
+			callbackString = GsonProcessor.getInstance().getGsonWithExposedFilter().toJson(callback);
 		init();
 	}
 	
@@ -105,20 +105,20 @@ public abstract class ToucanWorker extends Thread implements Runnable {
 		this.context = context;
 		this.data = data;
 		if(data!=null)
-			this.dataString = GsonProcessor.getInstance().gsonExposedFilter.toJson(data);
+			this.dataString = GsonProcessor.getInstance().getGsonWithExposedFilter().toJson(data);
 		this.dataType = dataType;
 		this.apiToken = apiToken;
 		this.endpoint = endpoint;
 		this.opname = opName;		
 		this.callback = callback;
 		if(callback!=null)
-			callbackString = GsonProcessor.getInstance().gsonExposedFilter.toJson(callback);
+			callbackString = GsonProcessor.getInstance().getGsonWithExposedFilter().toJson(callback);
 		init();
 	}
 	
 	private void init() {
 		//We create the unique JobName				
-		jsonData = GsonProcessor.getInstance().gsonExposedFilter.toJson(this);
+		jsonData = GsonProcessor.getInstance().getGsonWithExposedFilter().toJson(this);
 		this.jobName = ToucanClient.CACHED_REQUEST_FILE_PREFIX + ToolBox.crypto_getHASH(jsonData.getBytes(), HASH_TYPE.sha1);		
 	}
 	
@@ -161,13 +161,13 @@ public abstract class ToucanWorker extends Thread implements Runnable {
 		if(data!=null) {
 			if(data instanceof LinkedTreeMap){
 				if(dataType==TOUCAN_WORKER_POST_DATA_TYPE.REGISTRATION) {
-					DeviceRegistrationRequest devRegRequest = GsonProcessor.getInstance().gsonExposedFilter.fromJson(dataString, DeviceRegistrationRequest.class);
+					DeviceRegistrationRequest devRegRequest = GsonProcessor.getInstance().getGsonWithExposedFilter().fromJson(dataString, DeviceRegistrationRequest.class);
 					this.data = devRegRequest;
 				}else if(dataType==TOUCAN_WORKER_POST_DATA_TYPE.ACK){
-					ACKRequest ackRequest = GsonProcessor.getInstance().gsonExposedFilter.fromJson(dataString, ACKRequest.class);
+					ACKRequest ackRequest = GsonProcessor.getInstance().getGsonWithExposedFilter().fromJson(dataString, ACKRequest.class);
 					this.data = ackRequest;
 				}else if(dataType==TOUCAN_WORKER_POST_DATA_TYPE.TAGS){
-					AppDevTagsOperationRequest tagsRequest = GsonProcessor.getInstance().gsonExposedFilter.fromJson(dataString, AppDevTagsOperationRequest.class);
+					AppDevTagsOperationRequest tagsRequest = GsonProcessor.getInstance().getGsonWithExposedFilter().fromJson(dataString, AppDevTagsOperationRequest.class);
 					this.data = tagsRequest;
 				}
 			}else{
@@ -275,7 +275,7 @@ public abstract class ToucanWorker extends Thread implements Runnable {
 	protected Response parseResponse(String jsonResponse) throws ResponseParseException {
 		Response result = null;
     	try{
-    		result = GsonProcessor.getInstance().gsonExposedFilter.fromJson(jsonResponse, Response.class);
+    		result = GsonProcessor.getInstance().getGsonWithExposedFilter().fromJson(jsonResponse, Response.class);
     		if(result==null) {
     			Log.e(ToucanClient.LOG_TAG, "Operation done but response could not be parsed");
     			throw new ResponseParseException("Response could not be parsed");
@@ -298,7 +298,7 @@ public abstract class ToucanWorker extends Thread implements Runnable {
 	public static ToucanPostWorker initializePOSTFromJSON(String jsonData) {
 		ToucanPostWorker res = null;
 		
-		ToucanWorker temp = GsonProcessor.getInstance().gsonExposedFilter.fromJson(jsonData, ToucanPostWorker.class);
+		ToucanWorker temp = GsonProcessor.getInstance().getGsonWithExposedFilter().fromJson(jsonData, ToucanPostWorker.class);
 		res = new ToucanPostWorker(temp);
 		if(temp.callbackString!=null && temp.callbackString.length()>0)
 			res.callbackString = temp.callbackString;
@@ -315,7 +315,7 @@ public abstract class ToucanWorker extends Thread implements Runnable {
 	public static ToucanGetWorker initializeGETFromJSON(String jsonData) {
 		ToucanGetWorker res = null;
 		
-		ToucanWorker temp = GsonProcessor.getInstance().gsonExposedFilter.fromJson(jsonData, ToucanGetWorker.class);
+		ToucanWorker temp = GsonProcessor.getInstance().getGsonWithExposedFilter().fromJson(jsonData, ToucanGetWorker.class);
 		res = new ToucanGetWorker(temp);		
 		if(temp.callbackString!=null && temp.callbackString.length()>0)
 			res.callbackString = temp.callbackString;
@@ -337,7 +337,7 @@ public abstract class ToucanWorker extends Thread implements Runnable {
 	 */
 	private void cacheOperationRequest(ToucanWorker operation) {
 		try{
-			String jsonData = GsonProcessor.getInstance().gsonExposedFilter.toJson(operation);
+			String jsonData = GsonProcessor.getInstance().getGsonWithExposedFilter().toJson(operation);
 			String fileName = operation.getJobId();			
 			ToolBox.storage_storeDataInInternalStorage(context, fileName, jsonData.getBytes());
 			Log.i(ToucanClient.LOG_TAG, "Saved pending operation request to disk (" + operation.getOperationName() + "/" + operation.getJobId() + ")");
